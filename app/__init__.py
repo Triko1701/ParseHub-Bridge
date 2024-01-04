@@ -5,12 +5,10 @@ from flask import Flask
 db = SQLAlchemy()
 Base = db.Model
 
-
-from app.config.config import Config
-from app.routes.webhook import webhook_blueprint
-
-
 def create_app():
+    from app.config.config import Config
+    from app.routes.webhook import webhook_blueprint
+
     app = Flask(__name__)
     app.register_blueprint(webhook_blueprint)
     

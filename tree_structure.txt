@@ -1,3 +1,6 @@
+Command:
+tree /F /A > tree_structure.txt & for /R %i in (*) do @dir /B "%i" >> tree_structure.txt
+
 Folder PATH listing for volume DATA
 Volume serial number is 689F-71EB
 D:.
