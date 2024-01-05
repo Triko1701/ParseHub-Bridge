@@ -1,10 +1,9 @@
-from sqlalchemy import JSON
-from sqlalchemy import DateTime
+from sqlalchemy.dialects.postgresql import ARRAY
 
-from app import db, Base
+from ..extensions import db
 
 
-class Post(Base):
+class Post(db.Model):
     __tablename__ = 'post'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -17,8 +16,8 @@ class Post(Base):
     salary = db.Column(db.String(255))
     time_posted = db.Column(db.String(255))
     description = db.Column(db.Text)
-    employer_questions = db.Column(db.Text[])
-    insert_time = db.Column(db.DateTime(timezone=True))
+    employer_questions = db.Column(ARRAY(db.Text))
+    updated = db.Column(db.DateTime(timezone=True))
     
     def __repr__(self):
         return f"<Job post url {self.job_url}>"

@@ -1,10 +1,7 @@
-from sqlalchemy import JSON
-from sqlalchemy import DateTime
-
-from app import db, Base
+from ..extensions import db
 
 
-class Run(Base):
+class Run(db.Model):
     __tablename__ = 'run'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -15,7 +12,7 @@ class Run(Base):
     md5sum = db.Column(db.TEXT)
     start_url = db.Column(db.Text)
     start_value = db.Column(db.JSON)
-    insert_time = db.Column(db.DateTime(timezone=True))
+    updated = db.Column(db.DateTime(timezone=True))
 
     def __repr__(self):
         return f"<Run token {self.run_token}>"
