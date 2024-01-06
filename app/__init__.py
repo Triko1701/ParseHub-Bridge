@@ -1,15 +1,18 @@
 from flask import Flask
 
-from .extensions import db
-from .config.config import Config
-from .routes.webhook import webhook_blueprint
-
 
 def create_app():
     app = Flask(__name__)
-    app.register_blueprint(webhook_blueprint)
+    
+    from .config.config import Config
     app.config.from_object(Config)
+    
+    from .routes.webhook import webhook_blueprint
+    app.register_blueprint(webhook_blueprint)
+    
+    from .extensions import db
     db.init_app(app)
+    
     return app
     
     # Import models within the application context to avoid circular import

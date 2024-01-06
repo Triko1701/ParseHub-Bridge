@@ -7,3 +7,6 @@ pytz
 python-decouple
 celery
 redis
+pathlib2
+python-decouple
+google-api-python-client

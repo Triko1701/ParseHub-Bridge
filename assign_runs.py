@@ -16,10 +16,10 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from . import app
+from .app import create_app
 from .app.extensions import db
 from .app.models.Run import Run
-from .utils.vm_metadata_extraction import get_vm_meta_field
+from .utils.vm_metadata_extraction import get_vm_meta
 from .utils.time import get_current_time
 
 def convert_google_sheet_url(url):
@@ -94,13 +94,16 @@ def get_urls(base_urls):
 
 
 def main():
+    app = create_app()
+    
+    # gg_sheet_url = get_vm_meta("gg_sheet_url")
     gg_sheet_url = 'https://docs.google.com/spreadsheets/d/1lwbfmmsP6N1gNvDrHjPF2CQTsM9nwXIwkjtveXdh37E/edit#gid=1541863908'
     gg_sheet_url = convert_google_sheet_url(gg_sheet_url)
     df = pd.read_csv(gg_sheet_url)
     base_urls = df['URL'].tolist()
     urls = get_urls(base_urls)
     
-    number_of_slaves = get_vm_meta_field("number_of_slaves")
+    number_of_slaves = get_vm_meta("number_of_slaves")
     urls_per_slave = len(urls) // number_of_slaves  # Integer division to get floor value
 
     for i in range(number_of_slaves):
@@ -113,5 +116,6 @@ def main():
             db.session.add(run)
 
     db.session.commit()
+    
 if __name__ == "__main__":
     main()
