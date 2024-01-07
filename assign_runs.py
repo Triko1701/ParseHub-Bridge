@@ -94,8 +94,7 @@ def get_urls(base_urls):
 
 
 def main():
-    
-    # gg_sheet_url = get_vm_metadata("gg_sheet_url")
+    gg_sheet_url = get_vm_metadata("gg_sheet_url")
     gg_sheet_url = 'https://docs.google.com/spreadsheets/d/1lwbfmmsP6N1gNvDrHjPF2CQTsM9nwXIwkjtveXdh37E/edit#gid=1541863908'
     gg_sheet_url = convert_google_sheet_url(gg_sheet_url)
     df = pd.read_csv(gg_sheet_url)
@@ -103,8 +102,7 @@ def main():
     urls = get_urls(base_urls)
     
     number_of_slaves = get_vm_metadata("number_of_slaves")
-    urls_per_slave = len(urls) // number_of_slaves  # Integer division to get floor value
-
+    urls_per_slave = len(urls) // number_of_slaves
 
     app = create_app()
     with app.app_context():
