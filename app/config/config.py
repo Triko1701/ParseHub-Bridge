@@ -1,4 +1,4 @@
-from utils.vm_metadata_extraction import get_vm_metadata_field
+from utils.vm_metadata_extraction import get_vm_metadata
 import json
 
 # db_info = json.loads(get_vm_metadata_field("db_info"))

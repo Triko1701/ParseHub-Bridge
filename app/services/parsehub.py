@@ -1,6 +1,6 @@
 import requests
 
-from ...utils.vm_metadata_extraction import get_vm_metadata
+from utils.vm_metadata_extraction import get_vm_metadata
 from ..models.Run import Run
 from ..extensions import db
 

@@ -2,7 +2,7 @@
 from ..models.Run import Run
 from ..models.Post import Post
 from ..extensions import db
-from ...utils.time import get_time
+from utils.time import get_time
 
 # import psycopg2
 # from functools import wraps
