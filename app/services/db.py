@@ -1,4 +1,4 @@
-# from utils.vm_metadata_extraction import get_vm_meta_field
+# from utils.vm_metadata_extraction import get_vm_metadata_field
 from ..models.Run import Run
 from ..models.Post import Post
 from ..extensions import db
@@ -55,12 +55,12 @@ def update_run(filters, updates):
     # db.session.commit()
 
 
-# DB_IP = get_vm_meta_field("db_ip")
-# DB_USER = get_vm_meta_field("db_user")
-# DB_PASSWORD = get_vm_meta_field("db_password")
-# DB = get_vm_meta_field("db")
-# JOB_TABLE = get_vm_meta_field("job_table")
-# RUN_TABLE = get_vm_meta_field("run_table")
+# DB_IP = get_vm_metadata_field("db_ip")
+# DB_USER = get_vm_metadata_field("db_user")
+# DB_PASSWORD = get_vm_metadata_field("db_password")
+# DB = get_vm_metadata_field("db")
+# JOB_TABLE = get_vm_metadata_field("job_table")
+# RUN_TABLE = get_vm_metadata_field("run_table")
 
 
 # def db_connection(db: str=DB, user: str=DB_USER, password: str=DB_PASSWORD, host: str=DB_IP, port: int=5432):

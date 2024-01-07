@@ -1,6 +1,6 @@
 import requests
 
-def get_vm_meta(*keys):
+def get_vm_metadata(*keys):
     results = []
     
     # Define headers with the required Metadata-Flavor
@@ -24,7 +24,7 @@ def get_vm_meta(*keys):
     return tuple(results)
 
 
-# def get_vm_meta(key):
+# def get_vm_metadata(key):
 
 #     # Define the metadata URL for the VM name
 #     metadata_url = f"http://metadata.google.internal/computeMetadata/v1/instance/{key}"

@@ -1,7 +1,7 @@
-from utils.vm_metadata_extraction import get_vm_meta_field
+from utils.vm_metadata_extraction import get_vm_metadata_field
 import json
 
-# db_info = json.loads(get_vm_meta_field("db_info"))
+# db_info = json.loads(get_vm_metadata_field("db_info"))
 db_info = {
     'ip': 'localhost',
     'user': 'postgres',

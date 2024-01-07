@@ -16,3 +16,4 @@ class Run(db.Model):
 
     def __repr__(self):
         return f"<Run token {self.run_token}>"
+    
