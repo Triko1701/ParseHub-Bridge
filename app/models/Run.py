@@ -15,5 +15,5 @@ class Run(db.Model):
     updated = db.Column(db.DateTime(timezone=True))
 
     def __repr__(self):
-        return f"<Run token {self.run_token}>"
+        return f"<Run ID {self.id}>"
     

@@ -8,10 +8,10 @@ from ..services.parsehub import get_run_data, trigger_waiting_runs
 @app_celery.task
 def process_webhook(form_data):
     
-    status = form_data['status']
-    run_token = form_data['run_token']
-    md5sum = form_data['md5sum']
-    new_run = form_data['new_run']
+    status = form_data.get('status')
+    run_token = form_data.get('run_token')
+    md5sum = form_data.get('md5sum')
+    new_run = form_data.get('new_run')
     
     if status == 'error': # ERROR
         

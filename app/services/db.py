@@ -4,9 +4,6 @@ from ..models.Post import Post
 from ..extensions import db
 from utils.time import get_time
 
-# import psycopg2
-# from functools import wraps
-
 
 def insert_data(data):
     timestamp = get_time()
@@ -35,24 +32,11 @@ def update_run(filters, updates):
     db.session.commit()
 
 
-# def update_run():
-    
-    # for post in data["job_post"]:
-        # new_post = Post(
-        #     job_url = post["job_url"],
-        #     title = post["title"],
-        #     advertiser = post["advertiser"],
-        #     location = post["location"],
-        #     category = post["category"],
-        #     job_type = post["job_type"],
-        #     salary = post["salary"],
-        #     description = post["description"],
-        #     time_posted = post["time_posted"],
-        #     employer_questions = post["employer_questions"],
-        #     insert_time = get_time()
-        # )
-    #     db.session.add(new_post)
-    # db.session.commit()
+
+
+
+# import psycopg2
+# from functools import wraps
 
 
 # DB_IP = get_vm_metadata_field("db_ip")

@@ -14,11 +14,3 @@ def create_app():
     db.init_app(app)
     
     return app
-    
-    # Import models within the application context to avoid circular import
-    # with app.app_context():
-    #     from app.models.Run import Run
-    #     from app.models.Post import Post
-        
-    #     db.create_all() 
-            

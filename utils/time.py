@@ -1,9 +1,9 @@
 from datetime import datetime
 import pytz
 
-def get_time():
+def get_time(tz: str='Australia/Sydney'):
     # Sydney Timezone
-    sydney_tz = pytz.timezone('Australia/Sydney')
+    tz = pytz.timezone(tz)
     # Sydney Time
-    time_sydney = datetime.now(sydney_tz)
-    return time_sydney
+    time = datetime.now(tz)
+    return time

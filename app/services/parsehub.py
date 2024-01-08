@@ -49,8 +49,7 @@ def trigger_waiting_runs(n: int=1):
     
     # Trigger the run(s)
     n = min(n, len(runs_to_be_triggered))
-    for i in range(n):
-        run = runs_to_be_triggered[i]
+    for run in runs_to_be_triggered[:n]:
         try:
             trigger_run(api_key, project_token, run.start_url)
             run.status = 'queued'
