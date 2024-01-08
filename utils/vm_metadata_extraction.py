@@ -8,7 +8,8 @@ def get_vm_metadata(*keys):
     for key in keys:
         # Define the metadata URL for the VM name
         metadata_url = f"http://metadata.google.internal/computeMetadata/v1/instance/{key}"
-    
+    # http://metadata.google.internal/computeMetadata/v1/instance/
+    # network-interfaces/0/access-configs/0/external-ip
         # Make a GET request to retrieve the VM name
         response = requests.get(metadata_url, headers=headers)
     

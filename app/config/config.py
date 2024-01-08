@@ -1,13 +1,16 @@
 from utils.vm_metadata_extraction import get_vm_metadata
 import json
 
-# db_info = json.loads(get_vm_metadata_field("db_info"))
-db_info = {
-    'ip': 'localhost',
-    'user': 'postgres',
-    'password': 'alex',
-    'name': 'job'
-}
+try:
+    db_user, db_password, db_name, db_ip = get_vm_metadata("db_info")
+except:
+    db_info = {
+        'ip': 'localhost',
+        'user': 'postgres',
+        'password': 'alex',
+        'name': 'job'
+    }
+    
 db_ip = db_info.get('ip')
 db_user = db_info.get('user')
 db_password = db_info.get('password')

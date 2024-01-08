@@ -1,13 +1,3 @@
-# import os
-# import sys
-# current_dir = os.path.dirname(__file__)
-# base_dir = os.path.abspath(os.path.join(current_dir, '..', '..'))
-# models_dir = os.path.join(base_dir, r'slave\app\models')
-# sys.path.append(models_dir)
-# import Run
-
-# print(Run)
-
 import re
 import time
 import math
@@ -94,14 +84,14 @@ def get_urls(base_urls):
 
 
 def main():
-    gg_sheet_url = get_vm_metadata("gg_sheet_url")
+    gg_sheet_url = get_vm_metadata("GG_SHEET_URL")
     gg_sheet_url = 'https://docs.google.com/spreadsheets/d/1lwbfmmsP6N1gNvDrHjPF2CQTsM9nwXIwkjtveXdh37E/edit#gid=1541863908'
     gg_sheet_url = convert_google_sheet_url(gg_sheet_url)
     df = pd.read_csv(gg_sheet_url)
     base_urls = df['URL'].tolist()
     urls = get_urls(base_urls)
     
-    number_of_slaves = get_vm_metadata("number_of_slaves")
+    number_of_slaves = get_vm_metadata("NUM_SLAVES")
     urls_per_slave = len(urls) // number_of_slaves
 
     app = create_app()

@@ -11,7 +11,7 @@ def control_slave(action, slave_name,zone: str = "australia-southeast1-b"):
         run_ps_cmd(cmd)
     
 def main(zone: str = "australia-southeast1-b"):
-    num_slaves = get_vm_metadata("num_slaves")
+    num_slaves = get_vm_metadata("NUM_SLAVES")
     app = create_app()
     with app.app_context():
         for i in range(num_slaves):
