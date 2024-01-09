@@ -10,7 +10,6 @@ def get_custom_metadata(*keys):
     
         if response.status_code == 200:
             value = response.text
-            print(f"{key}: {value}")
             results.append(value)
         else:
             print(f"Failed to retrieve {key}")

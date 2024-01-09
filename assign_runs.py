@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from .app import create_app
 from .app.extensions import db
 from .app.models.Run import Run
-from .utils.metadata_extraction import get_custom_metadata
+from .utils.metadata import get_custom_metadata
 from .utils.time import get_current_time
 
 def convert_google_sheet_url(url):

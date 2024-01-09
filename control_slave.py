@@ -2,7 +2,7 @@ from sqlalchemy import or_, and_
 
 from app import create_app
 from app.models.Run import Run
-from utils.metadata_extraction import get_custom_metadata
+from utils.metadata import get_custom_metadata
 from utils.gce import control_vm_state
 
 

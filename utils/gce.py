@@ -1,7 +1,7 @@
 from google.auth import default
 from googleapiclient import discovery
 
-from metadata_extraction import get_zone
+from .metadata import get_zone
 
 
 def get_db_ip():
