@@ -1,4 +1,3 @@
-# from utils.vm_metadata_extraction import get_vm_metadata_field
 from ..models.Run import Run
 from ..models.Post import Post
 from ..extensions import db

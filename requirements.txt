@@ -10,3 +10,5 @@ redis
 pathlib2
 python-decouple
 google-api-python-client
+google-auth
+google-cloud-compute

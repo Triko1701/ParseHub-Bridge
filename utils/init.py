@@ -2,18 +2,31 @@ import subprocess
 import time
 from datetime import datetime
 import os
+import platform
 
 import pathlib 
 from decouple import Config, RepositoryEnv
 import json
-from googleapiclient.discovery import build
-from google.oauth2.service_account import Credentials
 
+
+def run_shell_cmd(cmd: str):
+    try:
+        print(f"Running command: {cmd}\n")
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+        output = (result.stdout + result.stderr).strip()
+        print(f"Output: {output}\n")
+        return output
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to run command. Exit Code {e.returncode}\n")
+        raise
 
 def run_ps_cmd(cmd: list[str], log: bool=True):
     all_outputs = []
     try:
-        full_cmd = ['powershell', '-Command'] + cmd
+        if platform.system() == "Windows":
+            full_cmd = ['powershell', '-Command'] + cmd
+        else:
+            full_cmd = cmd
         full_cmd_str = " ".join(cmd)
         if log: print(f"Running command: {full_cmd_str}\n")
         result = subprocess.run(full_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)

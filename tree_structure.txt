@@ -52,10 +52,10 @@ D:.
 |           
 +---utils
 |   |   time.py
-|   |   vm_metadata_extraction.py
+|   |   metadata_extraction.py
 |   |   
 |   \---__pycache__
-|           vm_metadata_extraction.cpython-311.pyc
+|           metadata_extraction.cpython-311.pyc
 |           
 \---__pycache__
         app.cpython-311.pyc
@@ -87,7 +87,7 @@ vm_metadata.cpython-311.pyc
 __init__.cpython-311.pyc
 __init__.cpython-311.pyc
 time.py
-vm_metadata_extraction.py
-vm_metadata_extraction.cpython-311.pyc
+metadata_extraction.py
+metadata_extraction.cpython-311.pyc
 app.cpython-311.pyc
 __init__.cpython-311.pyc

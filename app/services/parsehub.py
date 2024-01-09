@@ -1,6 +1,6 @@
 import requests
 
-from utils.vm_metadata_extraction import get_vm_metadata
+from utils.metadata_extraction import get_custom_metadata
 from ..models.Run import Run
 from ..extensions import db
 
@@ -42,7 +42,7 @@ def get_run_data(api_key, run_token, data_format='json'):
 
 def trigger_waiting_runs(n: int=1):
     # Get necessary parameters
-    VM_name, api_key, project_token = get_vm_metadata("name", "API_KEY", "PROJ_TOKEN")
+    VM_name, api_key, project_token = get_custom_metadata("name", "API_KEY", "PROJ_TOKEN")
     
     # Get waiting runs
     runs_to_be_triggered = Run.query.filter_by(slave=VM_name, status='waiting').all()

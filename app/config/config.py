@@ -1,20 +1,19 @@
-from utils.vm_metadata_extraction import get_vm_metadata
-import json
+from utils.metadata_extraction import get_custom_metadata
+from utils.gce import get_db_ip
+
 
 try:
-    db_user, db_password, db_name, db_ip = get_vm_metadata("db_info")
+    db_user, db_password, db_name = get_custom_metadata(
+                                                           "POSTGRES_USER",
+                                                           "POSTGRES_PASSWORD",
+                                                           "POSTGRES_DB",
+                                                           )
+    db_ip = get_db_ip()
 except:
-    db_info = {
-        'ip': 'localhost',
-        'user': 'postgres',
-        'password': 'alex',
-        'name': 'job'
-    }
-    
-db_ip = db_info.get('ip')
-db_user = db_info.get('user')
-db_password = db_info.get('password')
-db_name = db_info.get('name')
+    db_ip = "localhost"
+    user = "postgres"
+    passwd = "alex"
+    db_name = "job"
 
 class Config:
     SQLALCHEMY_DATABASE_URI = f'postgresql://{db_user}:{db_password}@{db_ip}/{db_name}'
