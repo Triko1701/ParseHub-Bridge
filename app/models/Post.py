@@ -1,8 +1,11 @@
 from sqlalchemy.dialects.postgresql import ARRAY
+from flask import current_app as c_app
 
-from ..extensions import db
+from utils import get_current_time
 
 
+current_time = lambda : get_current_time(c_app.config["DEFAULT_TIMEZONE"])
+db = c_app.extensions["sqlalchemy"]
 class Post(db.Model):
     __tablename__ = 'post'
     
@@ -17,7 +20,7 @@ class Post(db.Model):
     time_posted = db.Column(db.String(255))
     description = db.Column(db.Text)
     employer_questions = db.Column(ARRAY(db.Text))
-    updated = db.Column(db.DateTime(timezone=True))
+    updated_at = db.Column(db.DateTime(timezone=True), default=current_time, onupdate=current_time)
     
     def __repr__(self):
         return f"<Job post url {self.job_url}>"

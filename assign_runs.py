@@ -1,32 +1,17 @@
-import re
 import time
 import math
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+from sqlalchemy import and_
 
+from utils import get_user_metadata, convert_google_sheet_url
 from .app import create_app
-from .app.extensions import db
-from .app.models.Run import Run
-from .utils.metadata import get_custom_metadata
-from .utils.time import get_current_time
-
-def convert_google_sheet_url(url):
-    # Regular expression to match and capture the necessary part of the URL
-    pattern = r'https://docs\.google\.com/spreadsheets/d/([a-zA-Z0-9-_]+)(/edit#gid=(\d+)|/edit.*)?'
-
-    # Replace function to construct the new URL for CSV export
-    # If gid is present in the URL, it includes it in the export URL, otherwise, it's omitted
-    replacement = lambda m: f'https://docs.google.com/spreadsheets/d/{m.group(1)}/export?' + (f'gid={m.group(3)}&' if m.group(3) else '') + 'format=csv'
-
-    # Replace using regex
-    new_url = re.sub(pattern, replacement, url)
-
-    return new_url
+from .app.models import Run, RunStatus, Meta
 
 
-def get_total_jobs_count(job_search_url):
+def get_total_jobs_count(job_search_url: str) -> int:
   time.sleep(0.5)
   response = requests.get(job_search_url)
   
@@ -49,7 +34,23 @@ def get_total_jobs_count(job_search_url):
   return 0
 
 
-def get_urls(base_urls):
+def remove_existing_base_url(base_urls, db, app):
+  with app.app_context(), db.session.begin():
+    for base_url in base_urls:
+      exists = db.session.query(
+        db.session.query(Run).exists().filter(
+            and_(
+                Run.start_url.like(f"%{base_url}%"),
+                Run.status == RunStatus.WAITING
+            )
+        )
+      ).scalar()
+      
+      if exists:
+        base_urls.remove(base_url)
+
+
+def get_urls(base_urls: list(str)) -> list(str):
   # Salary ranges
   salary_limits = ["30", "40", "50", "60", "70", "80", "100", "120", "150", "200", "250", "350"]
   salary_limits = [limit + "000" for limit in salary_limits]
@@ -83,31 +84,30 @@ def get_urls(base_urls):
   return urls
 
 
-def main():
-    gg_sheet_url = get_custom_metadata("GG_SHEET_URL")
-    gg_sheet_url = convert_google_sheet_url(gg_sheet_url)
-    df = pd.read_csv(gg_sheet_url)
-    base_urls = df.get('URL').tolist()
-    urls = get_urls(base_urls)
-    
-    number_of_slaves = get_custom_metadata("NUM_SLAVES")
-    urls_per_slave = len(urls) // number_of_slaves
+def main() -> None:
+  app = create_app()
+  db = app.extensions["sqlalchemy"]  
+  
+  GG_SHEET_URL = get_user_metadata(Meta.GG_SHEET_URL)
+  NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES)
+  gg_sheet_url = convert_google_sheet_url(GG_SHEET_URL)
+  df = pd.read_csv(gg_sheet_url)
+  base_urls = df.get('URL').tolist()
+  remove_existing_base_url(base_urls, db, app)
+  urls = get_urls(base_urls)
+  
+  URLS_PER_SLAVE = len(urls) // NUM_SLAVES
+  with app.app_context(), db.session.begin():
+      for i in range(NUM_SLAVES):
+          start_index = i * URLS_PER_SLAVE
+          end_index = start_index + URLS_PER_SLAVE if i < NUM_SLAVES - 1 else len(urls)
+          urls_for_slave = urls[start_index:end_index]
+          
+          for url in urls_for_slave:
+              run = Run(start_url=url, status=RunStatus.WAITING, slave=f"slave{i+1}")
+              db.session.add(run)
 
-    app = create_app()
-    with app.app_context():
-        for i in range(number_of_slaves):
-            start_index = i * urls_per_slave
-            end_index = start_index + urls_per_slave if i < number_of_slaves - 1 else len(urls)
-            urls_for_slave = urls[start_index:end_index]
-            
-            for url in urls_for_slave:
-                run = Run(start_url=url, status="waiting", slave=f"slave{i}", updated=get_current_time())
-                db.session.add(run)
-
-        db.session.commit()
         
 if __name__ == "__main__":
-  try:
     main()
-  except:
-    print("Failed to assign runs")
+  

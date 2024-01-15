@@ -1,10 +1,9 @@
 from app import create_app
-from app.extensions import db
-from app.models.Run import Run
-from app.models.Post import Post
 
-def main():
+
+def main() -> None:
     app = create_app()
+    db = app.extension["sqlalchemy"]
     with app.app_context():
         db.create_all()
         

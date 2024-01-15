@@ -1,30 +1,35 @@
-from sqlalchemy import or_, and_
+from sqlalchemy import and_
 
 from app import create_app
-from app.models.Run import Run
-from utils.metadata import get_custom_metadata
-from utils.gce import control_vm_state
+from app.models import Run, RunStatus, Meta
+from utils import control_vm_state, get_user_metadata
 
 
-def main():
-    num_slaves = get_custom_metadata("NUM_SLAVES")
+def main() -> None:
     app = create_app()
-    with app.app_context():
-        for i in range(num_slaves):
+    db = app.extensions["sqlalchemy"]
+    with app.app_context(), db.session.begin():
+        NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES)
+        for i in range(NUM_SLAVES):
             slave_name = f"slave{i+1}"
-            # status require starting: waiting, queue, initialized, running,   
-            active_run = Run.query.filter(
+            active_run = db.session.query(Run).exists().filter(
                 and_(
                     Run.slave == slave_name,
-                    or_(Run.status == "waiting",
-                        Run.status == "queue",
-                        Run.status == "initialized",
-                        Run.status == "running")
+                    Run.status.in_([
+                        RunStatus.WAITING,
+                        RunStatus.QUEUED,
+                        RunStatus.INITIALIZED,
+                        RunStatus.RUNNING
+                    ])
                 )
-            ).first()
+            ).scalar()
             
             action = "start" if active_run else "stop"
-            control_vm_state(instance_name=slave_name, action=action)
+            
+            try:
+                control_vm_state(vm_name=slave_name, action=action)
+            except Exception as e:
+                print(f"Error occured when trying to {action} {slave_name}: {e}")
             
             
 if __name__ == "__main__":
