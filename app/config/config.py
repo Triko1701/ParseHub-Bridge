@@ -12,8 +12,8 @@ POSTGRES_DB = get_user_metadata(Meta.POSTGRES_DB)
 REDIS_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD)
 
 class Config():
-    DEBUG = True
-    TESTING = True
+    # DEBUG = True
+    # TESTING = True
 
     # Slave name, logging, default timezone
     SLAVE_NAME = socket.gethostname()
