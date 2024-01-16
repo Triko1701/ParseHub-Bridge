@@ -3,9 +3,11 @@ from flask import current_app as c_app
 
 from utils import get_current_time
 
+from ..extension import db
+
 
 current_time = lambda : get_current_time(c_app.config["DEFAULT_TIMEZONE"])
-db = c_app.extensions["sqlalchemy"]
+
 class Post(db.Model):
     __tablename__ = 'post'
     

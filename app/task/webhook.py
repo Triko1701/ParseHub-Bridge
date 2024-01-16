@@ -7,7 +7,7 @@ from ..services import insert_data, update_run, get_run_data, trigger_waiting_ru
 from ..models import RunStatus, Run
 
 
-@shared_task.task
+@shared_task
 def process_webhook(status: str, run_token: str, md5sum: str, new_run, created_at: str):
     
     new_run_token = get_dict_field(new_run, Run.run_token.key)

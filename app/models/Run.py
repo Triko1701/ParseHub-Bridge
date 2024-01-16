@@ -3,10 +3,10 @@ from flask import current_app as c_app
 from utils import get_current_time
 
 from .run_status import RunStatus
+from ..extension import db
 
 
 current_time = lambda : get_current_time(c_app.config["DEFAULT_TIMEZONE"])
-db = c_app.extensions["sqlalchemy"]
 
 class Run(db.Model):
     __tablename__ = 'run'
