@@ -1,6 +1,6 @@
 import os
 
-def create_file(file_path: str) -> None:
+def create_file(file_path: str, data: str=None) -> None:
     """
     Create a file and its parent directories if they don't exist.
 
@@ -17,5 +17,6 @@ def create_file(file_path: str) -> None:
 
     # Create the file if it doesn't exist
     if not os.path.exists(file_path):
-        with open(file_path, 'w'):
-            pass
+        with open(file_path, 'w') as f:
+            if data:
+                f.write(data)            

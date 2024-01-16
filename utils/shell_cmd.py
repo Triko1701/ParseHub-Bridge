@@ -19,4 +19,5 @@ def run_shell_cmd(cmd: str) -> str:
     """
     result = sp.run(cmd, stdout=sp.PIPE, stderr=sp.PIPE, text=True, shell=True)
     output = (result.stdout + result.stderr).strip()
+    print(output)
     return output

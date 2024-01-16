@@ -1,5 +1,4 @@
 from flask import Flask
-import logging
 from logging.handlers import RotatingFileHandler
 from utils import create_file
 
@@ -7,7 +6,7 @@ from utils import create_file
 def create_app() -> Flask:
     # Set logging config
     from .config import Config
-    # create_file(Config.LOG_FILE_PATH)
+    create_file(Config.LOG_FILE_PATH)
     file_handler = RotatingFileHandler(Config.LOG_FILE_PATH)
 
     app = Flask(__name__)
@@ -18,7 +17,8 @@ def create_app() -> Flask:
     db_init_app(app)
     celery_init_app(app)
     
-    from .routes import webhook_blueprint
+    from .routes import webhook_blueprint, greeting_blueprint
     app.register_blueprint(webhook_blueprint)
+    app.register_blueprint(greeting_blueprint)
     
     return app
