@@ -6,9 +6,9 @@ from ..models import Meta
 
 
 MASTER_IP = get_vm_ext_ip("master")
-POSTGRES_USER = get_user_metadata(Meta.POSTGRES_USER)
+USER = get_user_metadata(Meta.USER)
 POSTGRES_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD)
-POSTGRES_DB = get_user_metadata(Meta.POSTGRES_DB)
+PROJECT = get_user_metadata(Meta.PROJECT)
 REDIS_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD)
 
 class Config():
@@ -25,7 +25,7 @@ class Config():
     PROJ_TOKEN = get_user_metadata(Meta.PROJ_TOKEN)
     
     # Postgresl
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{MASTER_IP}/{POSTGRES_DB}"
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{USER}:{POSTGRES_PASSWORD}@{MASTER_IP}/{PROJECT}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Celery
