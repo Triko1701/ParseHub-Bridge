@@ -6,10 +6,10 @@ from ..models import Meta
 
 
 MASTER_IP = get_vm_ext_ip("master")
-USER = get_user_metadata(Meta.USER)
-POSTGRES_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD)
-PROJECT = get_user_metadata(Meta.PROJECT)
-REDIS_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD)
+USER = get_user_metadata(Meta.USER.value)
+POSTGRES_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD.value)
+PROJECT = get_user_metadata(Meta.PROJECT.value)
+REDIS_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD.value)
 
 class Config():
     # DEBUG = True
@@ -21,8 +21,8 @@ class Config():
     DEFAULT_TIMEZONE = "Australia/Sydney"
     
     # Parsehub
-    API_KEY = get_user_metadata(Meta.API_KEY)
-    PROJ_TOKEN = get_user_metadata(Meta.PROJ_TOKEN)
+    API_KEY = get_user_metadata(Meta.API_KEY.value)
+    PROJ_TOKEN = get_user_metadata(Meta.PROJ_TOKEN.value)
     
     # Postgresl
     SQLALCHEMY_DATABASE_URI = f"postgresql://{USER}:{POSTGRES_PASSWORD}@{MASTER_IP}/{PROJECT}"

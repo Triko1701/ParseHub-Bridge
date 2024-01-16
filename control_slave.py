@@ -9,17 +9,17 @@ def main() -> None:
     app = create_app()
     db = app.extensions["sqlalchemy"]
     with app.app_context(), db.session.begin():
-        NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES)
+        NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES.value)
         for i in range(NUM_SLAVES):
             slave_name = f"slave{i+1}"
             active_run = db.session.query(Run).exists().filter(
                 and_(
                     Run.slave == slave_name,
                     Run.status.in_([
-                        RunStatus.WAITING,
-                        RunStatus.QUEUED,
-                        RunStatus.INITIALIZED,
-                        RunStatus.RUNNING
+                        RunStatus.WAITING.value,
+                        RunStatus.QUEUED.value,
+                        RunStatus.INITIALIZED.value,
+                        RunStatus.RUNNING.value
                     ])
                 )
             ).scalar()

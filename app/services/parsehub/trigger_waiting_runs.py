@@ -13,7 +13,7 @@ def trigger_waiting_runs(n: int=1) -> None:
     host_name = c_app.config["SLAVE_NAME"]
     
     # Get waiting runs
-    waiting_runs = Run.query.filter_by(slave=host_name, status=RunStatus.WAITING).all()
+    waiting_runs = Run.query.filter_by(slave=host_name, status=RunStatus.WAITING.value).all()
     
     # Trigger the run(s)
     n = min(n, len(waiting_runs))
@@ -29,11 +29,11 @@ def trigger_waiting_runs(n: int=1) -> None:
                 r = trigger_run(api_key, project_token, run.start_url)
             except Exception as e:
                 c_app.logger.error(f"Failed to trigger the run {run.id}, start_url {run.start_url} - {e}")
-                run.status = RunStatus.TRIGGER_ERROR
+                run.status = RunStatus.TRIGGER_ERROR.value
                 continue
 
             count += 1
             run_token = get_dict_field(r.json(), run.run_token.key)
             status = get_dict_field(r.json(), run.status.key)
-            run.status = status if status else RunStatus.QUEUED
+            run.status = status if status else RunStatus.QUEUEDv
             run.run_token = run_token

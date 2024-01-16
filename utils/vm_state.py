@@ -27,7 +27,7 @@ def control_vm_state(vm_name: str, action: str) -> None:
     # The specified VM instance is stopped.
     """
     credentials, project_id = default()
-    zone = req.get(MetaUrl.ZONE, HEADER_GG_METADATA).split("/")[-1]
+    zone = req.get(MetaUrl.ZONE.value, HEADER_GG_METADATA).split("/")[-1]
     compute = discovery.build('compute', 'v1', credentials=credentials)
 
     if action == 'start':

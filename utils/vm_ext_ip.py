@@ -26,7 +26,7 @@ def get_vm_ext_ip(instance: str) -> str:
     '123.456.789.012'
     """
     credentials, project_id = default()
-    zone = req.get(MetaUrl.ZONE, HEADER_GG_METADATA).split("/")[-1]
+    zone = req.get(MetaUrl.ZONE.value, header=HEADER_GG_METADATA).split("/")[-1]
 
     compute = discovery.build('compute', 'v1', credentials=credentials)
     instance_info = compute.instances().get(project=project_id, zone=zone, instance=instance).execute()

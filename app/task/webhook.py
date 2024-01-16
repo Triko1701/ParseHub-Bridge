@@ -13,17 +13,17 @@ def process_webhook(status: str, run_token: str, md5sum: str, new_run, created_a
     new_run_token = get_dict_field(new_run, Run.run_token.key)
     new_status = get_dict_field(new_run, Run.status.key)
     
-    if status == RunStatus.ERROR:
+    if status == RunStatus.ERROR.value:
         if new_run: # new_run
             if new_run_token:
                 update_run(run_token, new_status, md5sum, new_run_token)
             else:
-                update_run(run_token, RunStatus.NEW_RUN_TOKEN_MISSED, md5sum)
+                update_run(run_token, RunStatus.NEW_RUN_TOKEN_MISSED.value, md5sum)
 
         else: # unknown error
             update_run(run_token, status, md5sum)
             
-    elif status == RunStatus.COMPLETE:
+    elif status == RunStatus.COMPLETE.value:
         data = get_run_data(run_token=run_token)
         remove_existing_posts(data)
         insert_data(data)
@@ -35,7 +35,7 @@ def process_webhook(status: str, run_token: str, md5sum: str, new_run, created_a
             if new_run_token:
                 update_run(run_token, new_status, md5sum, new_run_token)
             else:
-                update_run(run_token, RunStatus.NEW_RUN_TOKEN_MISSED, md5sum)
+                update_run(run_token, RunStatus.NEW_RUN_TOKEN_MISSED.value, md5sum)
         else:
             update_run(run_token, status, md5sum)
         

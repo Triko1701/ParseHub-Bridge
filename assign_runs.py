@@ -41,7 +41,7 @@ def remove_existing_base_url(base_urls, db, app):
         db.session.query(Run).exists().filter(
             and_(
                 Run.start_url.like(f"%{base_url}%"),
-                Run.status == RunStatus.WAITING
+                Run.status == RunStatus.WAITING.value
             )
         )
       ).scalar()
@@ -88,8 +88,8 @@ def main() -> None:
   app = create_app()
   db = app.extensions["sqlalchemy"]  
   
-  GG_SHEET_URL = get_user_metadata(Meta.GG_SHEET_URL)
-  NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES)
+  GG_SHEET_URL = get_user_metadata(Meta.GG_SHEET_URL.value)
+  NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES.value)
   gg_sheet_url = convert_google_sheet_url(GG_SHEET_URL)
   df = pd.read_csv(gg_sheet_url)
   base_urls = df.get('URL').tolist()
@@ -104,7 +104,7 @@ def main() -> None:
           urls_for_slave = urls[start_index:end_index]
           
           for url in urls_for_slave:
-              run = Run(start_url=url, status=RunStatus.WAITING, slave=f"slave{i+1}")
+              run = Run(start_url=url, status=RunStatus.WAITING.value, slave=f"slave{i+1}")
               db.session.add(run)
 
         
