@@ -1,96 +1,63 @@
 from google.auth import default
+from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 from googleapiclient import discovery
 import requests as req
 
 from .user_metadata import MetaUrl, HEADER_GG_METADATA
 
-
 class ComputeInstance():
-    def __init__(self, instance: str):
+    def __init__(self, instance: str, sa_key_path: str=None, zone: str=None):
         self.instance = instance
-        self.credentials, self.project_id = default()
-        self.zone = self.get_zone()
+        self.cred, self.proj_id = self.get_cred_proj_id(sa_key_path)
+        self.zone = self.get_zone() if not zone else zone
         self.compute = self.get_compute_instance()
-        self.ext_ip = self.get_ext_ip()
+        self.info = self.get_info()
     
+    def get_cred_proj_id(self, sa_key_path: str):
+        if not sa_key_path:
+            cred, proj_id = default()
+            return cred, proj_id
+        
+        cred = service_account.Credentials.from_service_account_file(
+            sa_key_path,
+            scopes=['https://www.googleapis.com/auth/cloud-platform'],
+        )
+        if cred.requires_scopes:
+            cred = cred.with_scopes(['https://www.googleapis.com/auth/cloud-platform'])
+        return cred, cred.project_id
+        
     def get_zone(self) -> str:
         return req.get(MetaUrl.ZONE.value, headers=HEADER_GG_METADATA).text.split("/")[-1]
     
     def get_compute_instance(self):
-        return discovery.build('compute', 'v1', credentials=self.credentials)
-        
-    def get_ext_ip(self) -> str:
-        instance_info = self.compute.instances().get(project=self.project_id, zone=self.zone, instance=self.instance).execute()
-        external_ip = instance_info['networkInterfaces'][0]['accessConfigs'][0]['natIP']
+        return discovery.build('compute', 'v1', credentials=self.cred)
+    
+    def get_info(self):
+        self.cred.refresh(Request())
+        info = self.compute.instances().get(project=self.proj_id, zone=self.zone, instance=self.instance).execute()
+        return info
+    
+    @property
+    def metadata(self) -> dict:
+        self.cred.refresh(Request())
+        instance_info = self.compute.instances().get(project=self.proj_id, zone=self.zone, instance=self.instance).execute()
+        metadata = instance_info.get('metadata', {}).get('items', [])
+        metadata_dict = {item['key']: item['value'] for item in metadata}
+        return metadata_dict
+    
+    @property
+    def ext_ip(self) -> str:
+        self.cred.refresh(Request())
+        external_ip = self.info['networkInterfaces'][0]['accessConfigs'][0]['natIP']
         return external_ip
     
-    def control(self, action: str)-> None:
+    def control(self, action: str) -> None:
+        self.cred.refresh(Request())
         if action.lower() == 'start':
-            self.compute.instances().start(project=self.project_id, zone=self.zone, instance=self.instance).execute()
+            self.compute.instances().start(project=self.proj_id, zone=self.zone, instance=self.instance).execute()
         elif action.lower() == 'stop':
-            self.compute.instances().stop(project=self.project_id, zone=self.zone, instance=self.instance).execute()
+            self.compute.instances().stop(project=self.proj_id, zone=self.zone, instance=self.instance).execute()
         else:
             raise ValueError("Invalid input for 'action'. Must be 'start' or 'stop'")
         
-  
-# def get_vm_ext_ip(instance: str) -> str:
-#     """
-#     Retrieve the external IP address of a specified instance in the same project and zone using the default authentication on Google Cloud Platform (GCP).
-
-#     Parameters:
-#     - instance (str): The name of the instance for which to retrieve the external IP address.
-
-#     Returns:
-#     - str: The external IP address of the specified instance.
-
-#     Raises:
-#     - requests.exceptions.HTTPError: If the HTTP request to the Metadata Server fails.
-#     - googleapiclient.errors.HttpError: If there is an error in the Google Cloud API request.
-
-#     Note:
-#     This function assumes the specified instance is in the same project and zone as the service account used for authentication.
-
-#     Example:
-#     >>> get_master_ext_ip('my-instance-name')
-#     '123.456.789.012'
-#     """
-#     credentials, project_id = default()
-#     zone = req.get(MetaUrl.ZONE.value, headers=HEADER_GG_METADATA).text.split("/")[-1]
-
-#     compute = discovery.build('compute', 'v1', credentials=credentials)
-#     instance_info = compute.instances().get(project=project_id, zone=zone, instance=instance).execute()
-#     external_ip = instance_info['networkInterfaces'][0]['accessConfigs'][0]['natIP']
-#     return external_ip
-      
-
-# def control_vm_state(instance: str, action: str) -> None:
-#     """
-#     Control the state of a Virtual Machine (VM) in the same project and zone using the default authentication on Google Cloud Platform (GCP).
-
-#     Parameters:
-#     - vm_name (str): The name of the VM whose state is to be controlled.
-#     - action (str): The action to be performed on the VM. Must be 'start' or 'stop'.
-
-#     Returns:
-#     - None
-
-#     Raises:
-#     - ValueError: If the 'action' parameter is not 'start' or 'stop'.
-
-#     Example:
-#     >>> control_vm_state('my-vm-instance', 'start')
-#     # The specified VM instance is started.
-
-#     >>> control_vm_state('my-vm-instance', 'stop')
-#     # The specified VM instance is stopped.
-#     """
-#     credentials, project_id = default()
-#     zone = req.get(MetaUrl.ZONE.value, headers=HEADER_GG_METADATA).text.split("/")[-1]
-#     compute = discovery.build('compute', 'v1', credentials=credentials)
-
-#     if action == 'start':
-#         compute.instances().start(project=project_id, zone=zone, instance=instance).execute()
-#     elif action == 'stop':
-#         compute.instances().stop(project=project_id, zone=zone, instance=instance).execute()
-#     else:
-#         raise ValueError("Invalid input for 'action'. Must be 'start' or 'stop'")
