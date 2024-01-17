@@ -8,8 +8,8 @@ from .trigger_run import trigger_run
 
 def trigger_waiting_runs(n: int=1) -> None:
     # Get necessary parameters
-    api_key = c_app.config[Meta.API_KEY]
-    project_token = c_app.config[Meta.PROJ_TOKEN]
+    api_key = c_app.config[Meta.API_KEY.value]
+    project_token = c_app.config[Meta.PROJ_TOKEN.value]
     host_name = c_app.config["SLAVE_NAME"]
     
     # Get waiting runs
@@ -35,5 +35,5 @@ def trigger_waiting_runs(n: int=1) -> None:
             count += 1
             run_token = get_dict_field(r.json(), run.run_token.key)
             status = get_dict_field(r.json(), run.status.key)
-            run.status = status if status else RunStatus.QUEUEDv
+            run.status = status if status else RunStatus.QUEUED.value
             run.run_token = run_token

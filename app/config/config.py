@@ -17,7 +17,7 @@ class Config():
 
     # Slave name, logging, default timezone
     SLAVE_NAME = socket.gethostname()
-    LOG_FILE_PATH = "var/log/Parsehub/flask.log"
+    LOG_FILE_PATH = f"var/log/{PROJECT}/flask.log"
     DEFAULT_TIMEZONE = "Australia/Sydney"
     
     # Parsehub
