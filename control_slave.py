@@ -2,7 +2,7 @@ from sqlalchemy import and_
 
 from app import create_app
 from app.models import Run, RunStatus, Meta
-from utils import control_vm_state, get_user_metadata
+from utils import control_vm_state, get_user_metadata, ComputeInstance
 
 
 def main() -> None:
@@ -27,7 +27,9 @@ def main() -> None:
             action = "start" if active_run else "stop"
             
             try:
-                control_vm_state(vm_name=slave_name, action=action)
+                slave_instance = ComputeInstance(slave_name)
+                slave_instance.control(action)
+                # control_vm_state(vm_name=slave_name, action=action)
             except Exception as e:
                 print(f"Error occured when trying to {action} {slave_name}: {e}")
             

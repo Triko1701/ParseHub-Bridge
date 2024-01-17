@@ -2,7 +2,7 @@ import time
 import math
 
 import pandas as pd
-import requests
+import requests as req
 from bs4 import BeautifulSoup
 from sqlalchemy import and_
 
@@ -13,7 +13,7 @@ from .app.models import Run, RunStatus, Meta
 
 def get_total_jobs_count(job_search_url: str) -> int:
   time.sleep(0.5)
-  response = requests.get(job_search_url)
+  response = req.get(job_search_url)
   
   if response.status_code == 200:
     # Parse the HTML content using BeautifulSoup
@@ -104,7 +104,7 @@ def main() -> None:
           urls_for_slave = urls[start_index:end_index]
           
           for url in urls_for_slave:
-              run = Run(start_url=url, status=RunStatus.WAITING.value, slave=f"slave{i+1}")
+              run = Run(start_url=url, slave=f"slave{i+1}")
               db.session.add(run)
 
         

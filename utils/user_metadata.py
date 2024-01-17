@@ -42,7 +42,7 @@ def get_user_metadata(key: str) -> str:
     >>> get_user_metadata('my_custom_key')
     'custom_value'
     """
-    r = req.get(MetaUrl.USER_METADATA_PREFIX.value + key, headers=HEADER_GG_METADATA.value)
+    r = req.get(MetaUrl.USER_METADATA_PREFIX.value + key, headers=HEADER_GG_METADATA)
     r.raise_for_status()    
     return r.text
 

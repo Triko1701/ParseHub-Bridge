@@ -1,13 +1,13 @@
 import socket
 
-from utils import get_user_metadata, get_vm_ext_ip
+from utils import get_user_metadata, ComputeInstance
 
 from ..models import Meta
 
-
-MASTER_IP = get_vm_ext_ip("master")
+master_instance = ComputeInstance("master")
+MASTER_IP = master_instance.ext_ip
 USER = get_user_metadata(Meta.USER.value)
-POSTGRES_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD.value)
+POSTGRES_PASSWORD = get_user_metadata(Meta.POSTGRES_PASSWORD.value)
 PROJECT = get_user_metadata(Meta.PROJECT.value)
 REDIS_PASSWORD = get_user_metadata(Meta.REDIS_PASSWORD.value)
 
@@ -21,9 +21,12 @@ class Config():
     DEFAULT_TIMEZONE = "Australia/Sydney"
     
     # Parsehub
-    API_KEY = get_user_metadata(Meta.API_KEY.value)
-    PROJ_TOKEN = get_user_metadata(Meta.PROJ_TOKEN.value)
-    
+    try:
+        API_KEY = get_user_metadata(Meta.API_KEY.value)
+        PROJ_TOKEN = get_user_metadata(Meta.PROJ_TOKEN.value)
+    except Exception as e:
+        print(f"Error occured when trying to retrieve Parsehub API key and project token: {e}")
+        
     # Postgresl
     SQLALCHEMY_DATABASE_URI = f"postgresql://{USER}:{POSTGRES_PASSWORD}@{MASTER_IP}/{PROJECT}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
