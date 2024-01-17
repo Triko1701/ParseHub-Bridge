@@ -1,7 +1,6 @@
 from flask import current_app as c_app
 
-from utils import get_dict_field
-
+from ...utils import get_dict_field
 from ...models import Run, RunStatus, Meta
 from .trigger_run import trigger_run
 

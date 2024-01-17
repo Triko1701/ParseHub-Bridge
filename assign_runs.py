@@ -7,9 +7,9 @@ import requests as req
 from bs4 import BeautifulSoup
 from sqlalchemy import and_, select
 
-from utils import get_user_metadata, convert_google_sheet_url
 from app import create_app
 from app.models import Run, RunStatus, Meta
+from app.utils import get_user_metadata, convert_google_sheet_url
 
 
 def get_total_jobs_count(job_search_url: str) -> int:

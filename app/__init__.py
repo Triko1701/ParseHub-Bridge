@@ -1,6 +1,5 @@
 from flask import Flask
 from logging.handlers import RotatingFileHandler
-from utils import create_file
 
 
 def create_app(config_class=None, role: str="slave") -> Flask:
@@ -13,6 +12,7 @@ def create_app(config_class=None, role: str="slave") -> Flask:
             from .config import MasterConfig as Config
         elif role.lower()=="slave":
             from .config import SlaveConfig as Config
+        from .utils import create_file
         create_file(Config.LOG_FILE_PATH)
         file_handler = RotatingFileHandler(Config.LOG_FILE_PATH)
         app.logger.addHandler(file_handler)

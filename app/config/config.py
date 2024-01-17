@@ -1,7 +1,6 @@
 import socket
 
-from utils import get_user_metadata, ComputeInstance
-
+from ..utils import get_user_metadata, ComputeInstance
 from ..models import Meta
 
 master_instance = ComputeInstance("master")

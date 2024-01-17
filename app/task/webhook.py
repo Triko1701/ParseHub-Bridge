@@ -1,8 +1,7 @@
 from flask import current_app as c_app
 from celery import shared_task
 
-from utils import get_dict_field
-
+from ..utils import get_dict_field
 from ..services import insert_data, update_run, get_run_data, trigger_waiting_runs, remove_existing_posts
 from ..models import RunStatus, Run
 

@@ -1,8 +1,7 @@
 from flask import current_app as c_app
 
-from utils import get_current_time
-
 from .run_status import RunStatus
+from ..utils import get_current_time
 from ..extension import db
 
 

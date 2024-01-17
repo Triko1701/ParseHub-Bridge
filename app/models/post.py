@@ -1,8 +1,7 @@
 from sqlalchemy.dialects.postgresql import ARRAY
 from flask import current_app as c_app
 
-from utils import get_current_time
-
+from ..utils import get_current_time
 from ..extension import db
 
 

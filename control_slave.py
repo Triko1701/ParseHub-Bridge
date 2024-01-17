@@ -2,7 +2,7 @@ from sqlalchemy import and_, select
 
 from app import create_app
 from app.models import Run, RunStatus, Meta
-from utils import get_user_metadata, ComputeInstance
+from app.utils import get_user_metadata, ComputeInstance
 
 
 def main() -> None:

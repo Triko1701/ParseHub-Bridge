@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app as c_app
 
-from utils import get_dict_field, get_current_time
-
+from ..utils import get_dict_field, get_current_time
 from ..task import process_webhook
 from ..models import Run
 
