@@ -24,7 +24,7 @@ def main() -> None:
                 )
             ).exists()).scalar()
             
-            action = "start" if bool(active_run) else "stop"
+            action = "start" if active_run else "stop"
             
             try:
                 slave_instance = ComputeInstance(slave_name)
