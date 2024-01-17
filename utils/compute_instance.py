@@ -25,9 +25,9 @@ class ComputeInstance():
         return external_ip
     
     def control(self, action: str)-> None:
-        if action == 'start':
+        if action.lower() == 'start':
             self.compute.instances().start(project=self.project_id, zone=self.zone, instance=self.instance).execute()
-        elif action == 'stop':
+        elif action.lower() == 'stop':
             self.compute.instances().stop(project=self.project_id, zone=self.zone, instance=self.instance).execute()
         else:
             raise ValueError("Invalid input for 'action'. Must be 'start' or 'stop'")

@@ -4,7 +4,7 @@ import math
 import pandas as pd
 import requests as req
 from bs4 import BeautifulSoup
-from sqlalchemy import and_
+from sqlalchemy import and_, select
 
 from utils import get_user_metadata, convert_google_sheet_url
 from .app import create_app
@@ -37,14 +37,12 @@ def get_total_jobs_count(job_search_url: str) -> int:
 def remove_existing_base_url(base_urls, db, app):
   with app.app_context(), db.session.begin():
     for base_url in base_urls:
-      exists = db.session.query(
-        db.session.query(Run).filter(
+      exists = db.session.query(select(1).filter(
             and_(
                 Run.start_url.like(f"%{base_url}%"),
                 Run.status == RunStatus.WAITING.value
             )
-        )
-      ).exists().scalar()
+      ).exists()).scalar()
       
       if exists:
         base_urls.remove(base_url)

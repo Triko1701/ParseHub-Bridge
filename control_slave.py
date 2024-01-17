@@ -1,4 +1,4 @@
-from sqlalchemy import and_
+from sqlalchemy import and_, select
 
 from app import create_app
 from app.models import Run, RunStatus, Meta
@@ -12,7 +12,7 @@ def main() -> None:
         NUM_SLAVES = int(get_user_metadata(Meta.NUM_SLAVES.value))
         for i in range(NUM_SLAVES):
             slave_name = f"slave{i+1}"
-            active_run = db.session.query(Run).filter(
+            active_run = db.session.query(select(1).filter(
                 and_(
                     Run.slave == slave_name,
                     Run.status.in_([
@@ -22,9 +22,9 @@ def main() -> None:
                         RunStatus.RUNNING.value
                     ])
                 )
-            ).exists().scalar()
+            ).exists()).scalar()
             
-            action = "start" if active_run else "stop"
+            action = "start" if bool(active_run) else "stop"
             
             try:
                 slave_instance = ComputeInstance(slave_name)
