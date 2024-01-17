@@ -14,3 +14,5 @@ pydantic
 google-api-python-client
 google-auth
 google-cloud-compute
+pandas
+beautifulsoup4

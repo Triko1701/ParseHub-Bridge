@@ -1,3 +1,4 @@
+from typing import List
 import time
 import math
 
@@ -7,8 +8,8 @@ from bs4 import BeautifulSoup
 from sqlalchemy import and_, select
 
 from utils import get_user_metadata, convert_google_sheet_url
-from .app import create_app
-from .app.models import Run, RunStatus, Meta
+from app import create_app
+from app.models import Run, RunStatus, Meta
 
 
 def get_total_jobs_count(job_search_url: str) -> int:
@@ -34,7 +35,7 @@ def get_total_jobs_count(job_search_url: str) -> int:
   return 0
 
 
-def remove_existing_base_url(base_urls, db, app):
+def remove_existing_base_url(base_urls: List[str], db, app) -> None:
   with app.app_context(), db.session.begin():
     for base_url in base_urls:
       url_exist = db.session.query(select(1).filter(
@@ -48,7 +49,7 @@ def remove_existing_base_url(base_urls, db, app):
         base_urls.remove(base_url)
 
 
-def get_urls(base_urls: list(str)) -> list(str):
+def get_urls(base_urls: List[str]) -> List[str]:
   # Salary ranges
   salary_limits = ["30", "40", "50", "60", "70", "80", "100", "120", "150", "200", "250", "350"]
   salary_limits = [limit + "000" for limit in salary_limits]
@@ -87,7 +88,7 @@ def main() -> None:
   db = app.extensions["sqlalchemy"]  
   
   GG_SHEET_URL = get_user_metadata(Meta.GG_SHEET_URL.value)
-  NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES.value)
+  NUM_SLAVES = int(get_user_metadata(Meta.NUM_SLAVES.value))
   gg_sheet_url = convert_google_sheet_url(GG_SHEET_URL)
   df = pd.read_csv(gg_sheet_url)
   base_urls = df.get('URL').tolist()
