@@ -2,7 +2,7 @@ from app import create_app
 
 
 def main() -> None:
-    app = create_app()
+    app = create_app(role="master")
     db = app.extensions["sqlalchemy"]
     with app.app_context():
         db.create_all()

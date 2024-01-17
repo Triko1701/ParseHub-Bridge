@@ -83,7 +83,7 @@ def get_urls(base_urls: list(str)) -> list(str):
 
 
 def main() -> None:
-  app = create_app()
+  app = create_app(role="master")
   db = app.extensions["sqlalchemy"]  
   
   GG_SHEET_URL = get_user_metadata(Meta.GG_SHEET_URL.value)

@@ -28,11 +28,16 @@ class MasterConfig(object):
     )    
 
 class SlaveConfig(MasterConfig):
-    # Slave name
-    SLAVE_NAME = socket.gethostname()
+    @property
+    def SLAVE_NAME():
+        return socket.gethostname()
     
-    # Parsehub
-    API_KEY = get_user_metadata(Meta.API_KEY.value)
-    PROJ_TOKEN = get_user_metadata(Meta.PROJ_TOKEN.value)
+    @property
+    def API_KEY():
+        return get_user_metadata(Meta.API_KEY.value)
+    
+    @property
+    def PROJ_TOKEN():
+        return get_user_metadata(Meta.PROJ_TOKEN.value)
     
 
