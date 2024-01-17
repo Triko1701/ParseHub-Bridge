@@ -9,3 +9,5 @@ class Meta(Enum):
     API_KEY = "API_KEY"
     PROJ_TOKEN = "PROJ_TOKEN"
     
+    NUM_SLAVES = "NUM_SLAVES"
+    GG_SHEET_URL = "GG_SHEET_URL"

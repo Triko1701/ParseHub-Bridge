@@ -38,13 +38,13 @@ def remove_existing_base_url(base_urls, db, app):
   with app.app_context(), db.session.begin():
     for base_url in base_urls:
       exists = db.session.query(
-        db.session.query(Run).exists().filter(
+        db.session.query(Run).filter(
             and_(
                 Run.start_url.like(f"%{base_url}%"),
                 Run.status == RunStatus.WAITING.value
             )
         )
-      ).scalar()
+      ).exists().scalar()
       
       if exists:
         base_urls.remove(base_url)

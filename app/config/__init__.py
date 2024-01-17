@@ -1,6 +1,7 @@
-from .config import Config
+from .config import SlaveConfig, MasterConfig
 
 
 __all__ = [
-    'Config'
+    "SlaveConfig",
+    "MasterConfig"
 ]

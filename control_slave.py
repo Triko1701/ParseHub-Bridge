@@ -2,17 +2,17 @@ from sqlalchemy import and_
 
 from app import create_app
 from app.models import Run, RunStatus, Meta
-from utils import control_vm_state, get_user_metadata, ComputeInstance
+from utils import get_user_metadata, ComputeInstance
 
 
 def main() -> None:
-    app = create_app()
+    app = create_app(role="master")
     db = app.extensions["sqlalchemy"]
     with app.app_context(), db.session.begin():
-        NUM_SLAVES = get_user_metadata(Meta.NUM_SLAVES.value)
+        NUM_SLAVES = int(get_user_metadata(Meta.NUM_SLAVES.value))
         for i in range(NUM_SLAVES):
             slave_name = f"slave{i+1}"
-            active_run = db.session.query(Run).exists().filter(
+            active_run = db.session.query(Run).filter(
                 and_(
                     Run.slave == slave_name,
                     Run.status.in_([
@@ -22,7 +22,7 @@ def main() -> None:
                         RunStatus.RUNNING.value
                     ])
                 )
-            ).scalar()
+            ).exists().scalar()
             
             action = "start" if active_run else "stop"
             

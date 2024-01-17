@@ -7,8 +7,8 @@ def remove_existing_posts(data: dict) -> None:
     db = c_app.extensions["sqlalchemy"]
     with db.session.begin():
         for i in range(len(data["job_post"])):
-            exists = db.session.query(Post).exists().filter(
+            exists = db.session.query(Post).filter(
                 Post.description == data["job_post"][i][Post.description.key]
-            )
+            ).exists().scalar()
             if exists:
                 del data["job_post"][i]
